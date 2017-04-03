@@ -1,6 +1,7 @@
 package de.stexan.ducangeandroidapp;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -20,7 +21,7 @@ import java.io.OutputStream;
 public class DatabaseAccess extends SQLiteOpenHelper {
     private final Context appContext;
     public SQLiteDatabase db; //make private later on
-    private static String db_name = "ducange.sqlite.gz";
+    private static String db_name = "ducange.sqlite";
     private String db_path;
     final String pathToDatabaseFile;
 
@@ -29,10 +30,10 @@ public class DatabaseAccess extends SQLiteOpenHelper {
         super(context, db_name, null, 1);
         this.appContext = context;
 
-        db_path = appContext.getFilesDir().getPath()+ BuildConfig.APPLICATION_ID+"/databases/";
+        db_path = appContext.getFilesDir().getPath();
 
 
-        pathToDatabaseFile = db_path + db_name;
+        pathToDatabaseFile = db_path + "/" + db_name;
 
         if (checkIfCopied()) {
             /* already copied */
@@ -62,8 +63,10 @@ public class DatabaseAccess extends SQLiteOpenHelper {
 
     private void copyDatabase() throws IOException {
         InputStream myInput;
-        FileOutputStream myOutput;
+        OutputStream myOutput;
 
+        /* check if Asset in place*/
+        String[] listAssets = appContext.getAssets().list("");
         /* try to open file stored in assets as InputStream */
         myInput = appContext.getAssets().open(db_name);
 
