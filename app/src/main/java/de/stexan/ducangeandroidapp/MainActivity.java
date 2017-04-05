@@ -15,7 +15,13 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             DatabaseAccess db = new DatabaseAccess(this);
+            /* TESTS
             textBoxView.setText(db.getDatabaseName());
+            String[] entry = db.accessEntry("A1");
+            textBoxView.setText(entry[3]);
+            */
+            String[][] form = db.entryList("ab");
+            textBoxView.setText(form[0][2]);
         } catch (IOException e) {
             e.printStackTrace();
         }
