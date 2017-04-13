@@ -10,10 +10,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by stexandev on 31.03.17.
+ * TBD:
+ * -- store db-file compressed and access via vfs? view: https://commons.apache.org/proper/commons-vfs/filesystems.html#gzip_and_bzip2
+ * -- implement online query?
  */
 
 public class DatabaseAccess extends SQLiteOpenHelper {
@@ -88,6 +93,35 @@ public class DatabaseAccess extends SQLiteOpenHelper {
 
         return formRow;
     }
+
+    /* return list of table rows from table “form”  */
+    public List<String[]> entryListNew(String input) {
+        SQLiteDatabase db = openDb();
+        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE norm LIKE \"" + input + "%\"", null);
+        List<String[]> formRowList = new ArrayList<String[]>();
+        String[] formRow = new String[5];
+
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.moveToNext();
+                formRow[0] = cursor.getString(0); //rend
+                formRow[1] = cursor.getString(1); //text
+                formRow[2] = cursor.getString(2); //norm
+                formRow[3] = cursor.getString(3); //id
+                formRow[4] = cursor.getString(4); //anchor
+                formRowList.add(formRow);
+            } while (cursor.moveToNext());
+        } else {
+            formRowList = null;
+        }
+
+        cursor.close();
+        db.close();
+
+        return formRowList;
+    }
+
+
 
     private SQLiteDatabase openDb() {
         return SQLiteDatabase.openDatabase(pathToDatabaseFile, null, SQLiteDatabase.OPEN_READONLY);
