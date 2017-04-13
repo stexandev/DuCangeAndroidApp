@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">DuCangeAndroidApp</string>
+    <string name="app_name">DuCange</string>
+    <string name="search_hint">Suche Stichwort...</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="menu_search">Suchen</string>
+    <string name="menu_imprint">Impressum</string>
 </resources>

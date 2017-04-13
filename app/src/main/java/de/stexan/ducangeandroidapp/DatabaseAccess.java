@@ -19,6 +19,7 @@ import java.util.List;
  * TBD:
  * -- store db-file compressed and access via vfs? view: https://commons.apache.org/proper/commons-vfs/filesystems.html#gzip_and_bzip2
  * -- implement online query?
+ * -- performing a full-text search using FTS3, rather than a LIKE query
  */
 
 public class DatabaseAccess extends SQLiteOpenHelper {
@@ -65,11 +66,27 @@ public class DatabaseAccess extends SQLiteOpenHelper {
 
         return entryRow;
     }
-
+    /** DuCange-Online behaviour (JavaScript
+     * Behavior of the main input for suggestion
+     * function qKey(input) {
+     * // no modification of content, do nothing
+     * if (input.last == input.value) return false;
+     * o=document.getElementById('fulltext');
+     * if (o && o.checked) return false;
+     * // keep track of last value
+     * input.last=input.value;
+     * var iframe=document.getElementById('side');
+     * if (!iframe) return true;
+     * iframe.src='suggest.php?q='+input.value;
+     * return true;
+     * }
+     * returns a list of <a href="id+anchor" class="sc">text</a>
+     * where id, anchor and text are the names of the table columns in table form
+     */
     /* return array of table rows from table “form”  */
     public String[][] entryList(String input) {
         SQLiteDatabase db = openDb();
-        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE norm LIKE \"" + input + "%\"", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
 
         String[][] formRow = new String[MAX_RETURNS][5];
         int i=0;
@@ -97,7 +114,7 @@ public class DatabaseAccess extends SQLiteOpenHelper {
     /* return list of table rows from table “form”  */
     public List<String[]> entryListNew(String input) {
         SQLiteDatabase db = openDb();
-        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE norm LIKE \"" + input + "%\"", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
         List<String[]> formRowList = new ArrayList<String[]>();
         String[] formRow = new String[5];
 
