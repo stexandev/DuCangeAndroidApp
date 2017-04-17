@@ -1,6 +1,7 @@
 package de.stexan.ducangeandroidapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -22,26 +23,19 @@ import java.util.List;
  * -- performing a full-text search using FTS3, rather than a LIKE query
  */
 
-public class DatabaseAccess extends SQLiteOpenHelper {
-    private final Context appContext;
-    private static final String DB_NAME = "ducange.sqlite";
+public class DatabaseAccess {
     private static final int MAX_RETURNS = 10;
-    private String db_path;
+    private final Context appContext;
     final String pathToDatabaseFile;
+    DatabaseFile dbFile;
+    boolean readable;
 
 
-    public DatabaseAccess (Context context) throws IOException {
-        super(context, DB_NAME, null, 1);
+    public DatabaseAccess (Context context) {
         this.appContext = context;
-
-        db_path = appContext.getFilesDir().getPath();
-
-
-        pathToDatabaseFile = db_path + "/" + DB_NAME;
-
-        if (! checkIfCopied()) {
-            copyDatabase();
-        }
+        this.dbFile = new DatabaseFile(appContext);
+        this.pathToDatabaseFile = dbFile.getPathToDatabaseFile();
+        this.readable = dbFile.checkLocalDbFile();
     }
 
     /* return table row from table “entry” */
@@ -66,7 +60,7 @@ public class DatabaseAccess extends SQLiteOpenHelper {
 
         return entryRow;
     }
-    /** DuCange-Online behaviour (JavaScript
+    /** DuCange-Online behaviour (JavaScript)
      * Behavior of the main input for suggestion
      * function qKey(input) {
      * // no modification of content, do nothing
@@ -142,52 +136,5 @@ public class DatabaseAccess extends SQLiteOpenHelper {
 
     private SQLiteDatabase openDb() {
         return SQLiteDatabase.openDatabase(pathToDatabaseFile, null, SQLiteDatabase.OPEN_READONLY);
-    }
-
-    private void copyDatabase() throws IOException {
-        InputStream myInput;
-        OutputStream myOutput;
-
-        /* check if Asset in place */
-        //String[] listAssets = appContext.getAssets().list("");
-
-        /* open file stored in assets as InputStream */
-        myInput = appContext.getAssets().open(DB_NAME);
-
-        /* open local database file(handler) as OutputStream */
-        myOutput = new FileOutputStream(pathToDatabaseFile);
-
-        /* copy */
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = myInput.read(buffer)) > 0) {
-            myOutput.write(buffer, 0, length);
-        }
-
-        /* close Streams */
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
-    }
-
-
-    /* Check if already copied */
-    private boolean checkIfCopied() {
-        boolean alreadyCopied;
-
-        File dbFile = new File(pathToDatabaseFile);
-        alreadyCopied = dbFile.exists();
-
-        return alreadyCopied;
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 }
