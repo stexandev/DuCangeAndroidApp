@@ -38,6 +38,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.stexan.ducangeandroidapp.MainActivity" />
         </activity>
+        <service android:name=".DatabaseFileService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="@string/copy_action_name" />
+                <action android:name="@string/dl_action_name" />
+            </intent-filter>
+        </service>
+        <receiver android:name=".DatabaseFileServiceReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="@string/copy_complete_action_name" />
+                <action android:name="@string/dl_complete_action_name" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

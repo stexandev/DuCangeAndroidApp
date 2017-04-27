@@ -7,4 +7,12 @@
     <string name="db_download_title">DuCange Glossary database download</string>
     <string name="db_download_description">DuCange Glossary database download description</string>
     <string name="title_activity_check_database">CheckDatabaseActivity</string>
+    <string name="copy_db_from_assets">Copy database file from assets</string>
+    <string name="dl_db_from_web">Download database file</string>
+
+    <string name="copy_action_name">de.stexan.ducangeandroidapp.COPY</string>
+    <string name="dl_action_name">de.stexan.ducangeandroidapp.DOWNLOAD</string>
+    <string name="copy_complete_action_name">de.stexan.ducangeandroidapp.COPY_COMPLETE</string>
+    <string name="dl_complete_action_name">de.stexan.ducangeandroidapp.DOWNLOAD_COMPLETE</string>
+
 </resources>

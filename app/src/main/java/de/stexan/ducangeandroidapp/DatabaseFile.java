@@ -2,11 +2,13 @@ package de.stexan.ducangeandroidapp;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,7 @@ import java.util.zip.GZIPInputStream;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
+
 
 /**
  * Created by stefan on 15.04.17.
@@ -41,24 +44,29 @@ public class DatabaseFile  {
     }
 
 
-    public void downloadDatabase() {
+    public long downloadDatabase() {
         //implement file download
+        long dlRef;
         DownloadManager dm = (DownloadManager) appContext.getSystemService(DOWNLOAD_SERVICE);
             Uri sourceUri = Uri.parse(DOWNLOADSOURCE_ONE);
             Uri destUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toURI()) + DL_FILE_NAME);
 
         DownloadManager.Request request = new DownloadManager.Request(sourceUri);
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        request.setAllowedOverRoaming(false);
-        request.setTitle("@string/db_download_title");
-        request.setDescription("@string/db_download_description");
+        request.setTitle(appContext.getString(R.string.db_download_title));
+        request.setDescription(appContext.getString(R.string.db_download_description));
         request.setDestinationUri(destUri);
 
-        dm.enqueue(request);
+        dlRef = dm.enqueue(request);
+        return dlRef;
     }
 
-    public boolean checkAssets() throws IOException {
-        return Arrays.asList(appContext.getAssets().list("")).contains(ASSET_FILE_NAME);
+    public boolean checkAssets() {
+        try {
+            return Arrays.asList(appContext.getAssets().list("")).contains(ASSET_FILE_NAME);
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public String getPathToDatabaseFile() {
@@ -66,72 +74,86 @@ public class DatabaseFile  {
     }
 
 
-    public void unzipDatabaseFromDownloads() throws IOException {
-        /* open downloaded gzip-file stored in download folder as InputStream */
-        GZIPInputStream is = new GZIPInputStream( new FileInputStream(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + DL_FILE_NAME));
-        /* open local database file(handler) as OutputStream */
-        OutputStream os = new FileOutputStream(pathToDatabaseFile);
+    public void unzipDatabaseFromDownloads() {
+        GZIPInputStream is;
+        OutputStream os;
+        MessageDigest md;
 
-        MessageDigest md = null;
         try {
+            /* open downloaded gzip-file stored in download folder as InputStream */
+            is = new GZIPInputStream( new FileInputStream(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + DL_FILE_NAME));
+            /* open local database file(handler) as OutputStream */
+            os = new FileOutputStream(pathToDatabaseFile);
+
             md = MessageDigest.getInstance("MD5");
+            //decorate inputStream is to calculate md5 sum
+            DigestInputStream dis = new DigestInputStream(is, md);
+
+            /* copy */
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = dis.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+
+                //chekc md5sum
+            checkMD5(md, DB_FILE_MD5);
+
+
+            /* close Streams */
+            os.flush();
+            os.close();
+            is.close();
+            dis.close();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        //decorate inputStream is to calculate md5 sum
-        DigestInputStream dis = new DigestInputStream(is, md);
-
-        /* copy */
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = dis.read(buffer)) > 0) {
-            os.write(buffer, 0, length);
-        }
-
-        //chekc md5sum
-        checkMD5(md, DB_FILE_MD5);
-
-
-        /* close Streams */
-        os.flush();
-        os.close();
-        is.close();
-        dis.close();
 
     }
 
-    public void copyDatabaseFromAssets() throws IOException {
-        /* open file stored in assets as InputStream */
-        InputStream is = appContext.getAssets().open(ASSET_FILE_NAME);
-        /* open local database file(handler) as OutputStream */
-        OutputStream os = new FileOutputStream(pathToDatabaseFile);
-
-        MessageDigest md = null;
+    public void copyDatabaseFromAssets() {
         try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
+            /* open file stored in assets as InputStream */
+            InputStream is = appContext.getAssets().open(ASSET_FILE_NAME);
+            /* open local database file(handler) as OutputStream */
+            OutputStream os = new FileOutputStream(pathToDatabaseFile);
+
+            MessageDigest md = null;
+            try {
+                md = MessageDigest.getInstance("MD5");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            //decorate inputStream is to calculate md5 sum
+            DigestInputStream dis = new DigestInputStream(is, md);
+
+            /* copy */
+            byte[] buffer = new byte[1024];
+            int length = 0;
+
+                while ((length = dis.read(buffer)) > 0) {
+                    os.write(buffer, 0, length);
+                }
+                //chekc md5sum
+                //checkMD5(md, DB_FILE_MD5);
+
+
+            /* close Streams */
+                os.flush();
+                os.close();
+                is.close();
+                dis.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        //decorate inputStream is to calculate md5 sum
-        DigestInputStream dis = new DigestInputStream(is, md);
-
-        /* copy */
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = dis.read(buffer)) > 0) {
-            os.write(buffer, 0, length);
-        }
-
-        //chekc md5sum
-        checkMD5(md, DB_FILE_MD5);
-
-
-        /* close Streams */
-        os.flush();
-        os.close();
-        is.close();
-        dis.close();
     }
+
+
+
 
     private boolean checkMD5(MessageDigest md, String dbFileMd5) {
         byte[] md5sum = md.digest();

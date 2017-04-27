@@ -6,7 +6,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 
-import java.io.IOException;
 
 /**
  * Created by stefan on 12.04.17.

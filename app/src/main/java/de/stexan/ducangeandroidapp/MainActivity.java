@@ -11,8 +11,7 @@ import android.view.MenuInflater;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,13 +21,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Toolbar theToolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(theToolbar);
-
-        TextView textBoxView = (TextView)findViewById(R.id.textBox);
-        DatabaseAccess db = new DatabaseAccess(this);
-        if (! db.readable) {
-            Intent intent = new Intent(this, CheckDatabaseActivity.class);
-            startActivity(intent);
-        }
 
         /* TESTS
         //Eintrag nach id ausgeben
@@ -41,6 +33,21 @@ public class MainActivity extends AppCompatActivity {
         List<String[]> form = db.entryListNew("ab");
         textBoxView.setText(form.get(0)[2]);
         */
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DatabaseAccess db = new DatabaseAccess(this);
+        if (! db.readable) {
+            Intent intent = new Intent(this, CheckDatabaseActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -89,4 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+
 }
