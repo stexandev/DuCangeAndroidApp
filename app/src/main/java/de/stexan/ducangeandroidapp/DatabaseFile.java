@@ -81,7 +81,7 @@ public class DatabaseFile  {
 
         try {
             /* open downloaded gzip-file stored in download folder as InputStream */
-            is = new GZIPInputStream( new FileInputStream(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + DL_FILE_NAME));
+            is = new GZIPInputStream( new FileInputStream(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + "/" + DL_FILE_NAME));
             /* open local database file(handler) as OutputStream */
             os = new FileOutputStream(pathToDatabaseFile);
 
@@ -180,7 +180,7 @@ public class DatabaseFile  {
         boolean alreadyDownloaded;
         boolean notCorrupted = true; //mock-up... implemet HASH check
 
-        File dbGzFile = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + DL_FILE_NAME);
+        File dbGzFile = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + "/" + DL_FILE_NAME);
         alreadyDownloaded = dbGzFile.exists();
 
         return (alreadyDownloaded & notCorrupted);

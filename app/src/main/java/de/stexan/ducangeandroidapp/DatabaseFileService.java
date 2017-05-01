@@ -15,8 +15,9 @@ import android.content.Intent;
 public class DatabaseFileService extends IntentService {
     private static final String copyActionName = String.valueOf(R.string.copy_action_name);
     private static final String dlActionName = String.valueOf(R.string.dl_action_name);
+    private static final String unzipActionName = String.valueOf(R.string.unzip_action_name);
     private static final String copyCompleteActionName = String.valueOf(R.string.copy_complete_action_name);
-    private static final String dlCompleteActionName = String.valueOf(R.string.dl_complete_action_name);
+    private static final String unzipCompleteActionName = String.valueOf(R.string.unzip_complete_action_name);
 
 
     public DatabaseFileService() {
@@ -32,7 +33,9 @@ public class DatabaseFileService extends IntentService {
             broadcastAction(copyCompleteActionName);
         } else if ( i.getAction().equals(dlActionName) ) {
             dbFile.downloadDatabase();
-            broadcastAction(dlCompleteActionName);
+        } else if (i.getAction().equals(unzipActionName)) {
+            dbFile.unzipDatabaseFromDownloads();
+            broadcastAction(unzipCompleteActionName);
         } else {
             System.out.println(i.getAction());
         }

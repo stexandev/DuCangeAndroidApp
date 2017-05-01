@@ -1,5 +1,6 @@
 package de.stexan.ducangeandroidapp;
 
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,7 +13,12 @@ import android.widget.TextView;
 public class CheckDatabaseActivity extends AppCompatActivity {
     private static final String copyActionName = String.valueOf(R.string.copy_action_name);
     private static final String dlActionName = String.valueOf(R.string.dl_action_name);
+    private static final String unzipActionName = String.valueOf(R.string.unzip_action_name);
+    private static final String copyCompleteActionName = String.valueOf(R.string.copy_complete_action_name);
+    private static final String unzipCompleteActionName = String.valueOf(R.string.unzip_complete_action_name);
+
     private BroadcastReceiver br;
+
 
 
     @Override
@@ -34,16 +40,23 @@ public class CheckDatabaseActivity extends AppCompatActivity {
             checkDbText.setText(R.string.copy_db_from_assets);
             i.setAction(copyActionName);
         } else {
-            checkDbText.setText(R.string.dl_db_from_web);
-            i.setAction(dlActionName);
+            if (dbFile.checkIfDownloaded()) {
+                checkDbText.setText(R.string.unzip_db);
+                i.setAction(unzipActionName);
+            } else {
+                checkDbText.setText(R.string.dl_db_from_web);
+                i.setAction(dlActionName);
+            }
+
         }
         progressBar.setVisibility(View.VISIBLE);
 
 
         br = new DatabaseFileServiceReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(copyActionName);
-        filter.addAction(dlActionName);
+        filter.addAction(copyCompleteActionName);
+        filter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        filter.addAction(unzipCompleteActionName);
         this.registerReceiver(br, filter);
 
         startService(i);
@@ -53,7 +66,7 @@ public class CheckDatabaseActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        this.unregisterReceiver(br);
+        //this.unregisterReceiver(br);
     }
 
 
