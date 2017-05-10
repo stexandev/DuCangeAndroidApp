@@ -1,10 +1,8 @@
 package de.stexan.ducangeandroidapp;
 
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,12 +15,16 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Toolbar theToolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(theToolbar);
+
+
+
 
         /* TESTS
         //Eintrag nach id ausgeben
@@ -41,9 +43,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         DatabaseAccess db = new DatabaseAccess(this);
+
         if (! db.readable) {
             Intent intent = new Intent(this, CheckDatabaseActivity.class);
             startActivity(intent);
+            /* TODO Change from activity to fragment?
+            DialogFragment newFragment = DatabaseFileFragment.newInstance();
+            newFragment.show(getFragmentManager(), "check db");
+            */
+        } else {
+            ArticleView articleView = (ArticleView) findViewById(R.id.articleView);
+            String[] example = db.accessEntry("A1");
+            articleView.loadArticle(example[3]);
         }
     }
 
@@ -98,6 +109,4 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
-
 }

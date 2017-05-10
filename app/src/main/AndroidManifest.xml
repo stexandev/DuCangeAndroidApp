@@ -16,28 +16,29 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".Search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".CheckDatabaseActivity"
             android:label="@string/title_activity_check_database"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.stexan.ducangeandroidapp.MainActivity" />
         </activity>
+
         <service android:name=".DatabaseFileService"
             android:exported="false">
             <intent-filter>
@@ -56,6 +57,8 @@
             </intent-filter>
         </receiver>
         -->
+        <meta-data android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
     </application>
 
 </manifest>

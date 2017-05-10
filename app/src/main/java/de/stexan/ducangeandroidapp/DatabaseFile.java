@@ -2,7 +2,6 @@ package de.stexan.ducangeandroidapp;
 
 import android.app.DownloadManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -172,7 +171,7 @@ public class DatabaseFile  {
         File dbFile = new File(pathToDatabaseFile);
         alreadyCopied = dbFile.exists();
 
-        return (alreadyCopied & notCorrupted);
+        return (alreadyCopied && notCorrupted);
     }
 
     /* Check if already downloaded */
@@ -183,7 +182,7 @@ public class DatabaseFile  {
         File dbGzFile = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + "/" + DL_FILE_NAME);
         alreadyDownloaded = dbGzFile.exists();
 
-        return (alreadyDownloaded & notCorrupted);
+        return (alreadyDownloaded && notCorrupted);
     }
 
 }

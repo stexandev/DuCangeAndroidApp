@@ -1,16 +1,8 @@
 package de.stexan.ducangeandroidapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +13,8 @@ import java.util.List;
  * -- store db-file compressed and access via vfs? view: https://commons.apache.org/proper/commons-vfs/filesystems.html#gzip_and_bzip2
  * -- implement online query?
  * -- performing a full-text search using FTS3, rather than a LIKE query
+ * -- handle E/SQLiteLog: (11) database corruption at line 51841 of [00bb9c9ce4]
+ * -- handle E/SQLiteLog: (11) database disk image is malformed
  */
 
 public class DatabaseAccess {
@@ -41,7 +35,12 @@ public class DatabaseAccess {
     /* return table row from table “entry” */
     public String[] accessEntry(String id) {
         SQLiteDatabase db = openDb();
-        Cursor cursor = db.rawQuery("SELECT * FROM entry WHERE id = \"" + id + "\"", null);
+        Cursor cursor; //TODO prepare a function taking a query, returning the cursor and handling the exceptions
+        try {
+            cursor = db.rawQuery("SELECT * FROM entry WHERE id = \"" + id + "\"", null);
+        } catch (android.database.sqlite.SQLiteDatabaseCorruptException e) {
+            cursor = null;
+        }
 
         String[] entryRow = new String[5];
 
@@ -75,12 +74,18 @@ public class DatabaseAccess {
      * return true;
      * }
      * returns a list of <a href="id+anchor" class="sc">text</a>
-     * where id, anchor and text are the names of the table columns in table form
+     * where id, anchor and text are the names of the table columns in table "form"
      */
     /* return array of table rows from table “form”  */
     public String[][] entryList(String input) {
         SQLiteDatabase db = openDb();
-        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
+        Cursor cursor;
+        try {
+            cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
+        } catch (android.database.sqlite.SQLiteDatabaseCorruptException e) {
+            cursor = null;
+        }
+
 
         String[][] formRow = new String[MAX_RETURNS][5];
         int i=0;
@@ -108,7 +113,12 @@ public class DatabaseAccess {
     /* return list of table rows from table “form”  */
     public List<String[]> entryListNew(String input) {
         SQLiteDatabase db = openDb();
-        Cursor cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
+        Cursor cursor;
+        try {
+            cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
+        } catch (android.database.sqlite.SQLiteDatabaseCorruptException e) {
+            cursor = null;
+        }
         List<String[]> formRowList = new ArrayList<String[]>();
         String[] formRow = new String[5];
 

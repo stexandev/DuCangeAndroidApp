@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class CheckDatabaseActivity extends AppCompatActivity {
@@ -32,7 +30,12 @@ public class CheckDatabaseActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         TextView checkDbText = (TextView) findViewById(R.id.checkDbText);
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.checkDbProgess);
+
+        DatabaseAccess db = new DatabaseAccess(this);
+        if ( db.readable) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
 
         DatabaseFile dbFile = new DatabaseFile(this);
         Intent i = new Intent(this, DatabaseFileService.class);
@@ -49,8 +52,6 @@ public class CheckDatabaseActivity extends AppCompatActivity {
             }
 
         }
-        progressBar.setVisibility(View.VISIBLE);
-
 
         br = new DatabaseFileServiceReceiver();
         IntentFilter filter = new IntentFilter();
@@ -66,31 +67,6 @@ public class CheckDatabaseActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //this.unregisterReceiver(br);
+        this.unregisterReceiver(br);
     }
-
-
-
-    public void check(View v){
-        DatabaseFile dbFile = new DatabaseFile(this);
-
-        if (dbFile.checkAssets()) {
-            dbFile.copyDatabaseFromAssets();
-        } else {
-            //check for downloaded file
-            if (! dbFile.checkIfDownloaded()) {
-                dbFile.downloadDatabase();
-            } else {
-                //unzip or copy, depending on impelementation of compressed virtual filesystem
-                dbFile.unzipDatabaseFromDownloads();
-            }
-
-        }
-
-    }
-    public void returnToMain(View v){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
 }
