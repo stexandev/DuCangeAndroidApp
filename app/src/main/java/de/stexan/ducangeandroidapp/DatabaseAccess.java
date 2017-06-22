@@ -3,6 +3,7 @@ package de.stexan.ducangeandroidapp;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class DatabaseAccess {
     }
 
     /* return table row from table “entry” */
+    //TODO wrap this with function quierying table form for “norm” and return concatenation of multiple articles, see example RESPONSUM
     public String[] accessEntry(String id) {
         SQLiteDatabase db = openDb();
         Cursor cursor; //TODO prepare a function taking a query, returning the cursor and handling the exceptions
@@ -59,6 +61,7 @@ public class DatabaseAccess {
 
         return entryRow;
     }
+
     /** DuCange-Online behaviour (JavaScript)
      * Behavior of the main input for suggestion
      * function qKey(input) {

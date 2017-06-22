@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             */
         } else {
             ArticleView articleView = (ArticleView) findViewById(R.id.articleView);
+            articleView.setWebViewClient(new ArticleViewClient());
             String[] example = db.accessEntry("A1");
             articleView.loadArticle(example[3]);
         }
