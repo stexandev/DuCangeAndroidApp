@@ -30,7 +30,7 @@ public class Search extends ListActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
                 DatabaseAccess db = new DatabaseAccess(this);
-                String[] result = db.accessEntry(query);
+                String[] result = db.accessEntryRow(query);
         }
     }
 }

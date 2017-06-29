@@ -1,1 +1,4 @@
 /* our own and custom CSS */
+a.cb, span.rights {
+    visibility: hidden;
+}

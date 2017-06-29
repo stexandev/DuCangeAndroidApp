@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         /* TESTS
         //Eintrag nach id ausgeben
-        String[] entry = db.accessEntry("A1");
+        String[] entry = db.accessEntryRow("A1");
         textBoxView.setText(entry[3]);
         //Tabellenzeile als Array of Arrays, mit (maximaler) Länge MAX_RETURNS
         String[][] form = db.entryList("ab");
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ArticleView articleView = (ArticleView) findViewById(R.id.articleView);
             articleView.setWebViewClient(new ArticleViewClient());
-            String[] example = db.accessEntry("A1");
+            String[] example = db.accessEntryRow("A1");
             articleView.loadArticle(example[3]);
         }
     }

@@ -4,8 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.AbstractSequentialList;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
 
 /**
@@ -18,24 +23,25 @@ import java.util.List;
  * -- handle E/SQLiteLog: (11) database disk image is malformed
  */
 
-public class DatabaseAccess {
+class DatabaseAccess {
     private static final int MAX_RETURNS = 10;
     private final Context appContext;
     final String pathToDatabaseFile;
     DatabaseFile dbFile;
     boolean readable;
 
-
-    public DatabaseAccess (Context context) {
+    // Constructor
+    DatabaseAccess(Context context) {
         this.appContext = context;
         this.dbFile = new DatabaseFile(appContext);
         this.pathToDatabaseFile = dbFile.getPathToDatabaseFile();
         this.readable = dbFile.checkLocalDbFile();
     }
 
+
     /* return table row from table “entry” */
     //TODO wrap this with function quierying table form for “norm” and return concatenation of multiple articles, see example RESPONSUM
-    public String[] accessEntry(String id) {
+    String[] accessEntryRow(String id) {
         SQLiteDatabase db = openDb();
         Cursor cursor; //TODO prepare a function taking a query, returning the cursor and handling the exceptions
         try {
@@ -61,6 +67,10 @@ public class DatabaseAccess {
 
         return entryRow;
     }
+    String accessEntry(String id) {
+        return accessEntryRow(id)[3];
+    }
+    
 
     /** DuCange-Online behaviour (JavaScript)
      * Behavior of the main input for suggestion
@@ -84,7 +94,7 @@ public class DatabaseAccess {
         SQLiteDatabase db = openDb();
         Cursor cursor;
         try {
-            cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
+            cursor = db.rawQuery("SELECT * FROM form WHERE norm LIKE \"" + input + "%\"", null);
         } catch (android.database.sqlite.SQLiteDatabaseCorruptException e) {
             cursor = null;
         }
@@ -114,20 +124,19 @@ public class DatabaseAccess {
     }
 
     /* return list of table rows from table “form”  */
-    public List<String[]> entryListNew(String input) {
+    List<String[]> queryFormRow(String input) {
         SQLiteDatabase db = openDb();
         Cursor cursor;
         try {
-            cursor = db.rawQuery("SELECT * FROM form WHERE text LIKE \"" + input + "%\"", null);
+            cursor = db.rawQuery("SELECT * FROM form WHERE norm LIKE \"" + input + "%\"", null);
         } catch (android.database.sqlite.SQLiteDatabaseCorruptException e) {
             cursor = null;
         }
-        List<String[]> formRowList = new ArrayList<String[]>();
+        List<String[]> formRowList = new LinkedList<>();
         String[] formRow = new String[5];
 
         if (cursor.moveToFirst()) {
             do {
-                cursor.moveToNext();
                 formRow[0] = cursor.getString(0); //rend
                 formRow[1] = cursor.getString(1); //text
                 formRow[2] = cursor.getString(2); //norm
@@ -143,6 +152,25 @@ public class DatabaseAccess {
         db.close();
 
         return formRowList;
+    }
+    // query a form and return a List of IDs
+    List<String> queryForm(String form) {
+        /* Hier muss normalisiert werden, bevor Spalte „norm“ abgefragt wird, d.h. bb>b, ch>h, h>, uswusf.
+         * vgl. die Implementation in DuCange in Datei ./enc/lib/lat.tr
+         * Nutze String replace(CharSequence target, CharSequence replacement)
+         */
+        List<String[]> formRowList = queryFormRow(form);
+        //List<String> ids = new LinkedList<>();
+        //use set to avoid duplicate entries
+        Set<String> ids = new LinkedHashSet<>();
+        if ( ! formRowList.isEmpty()) {
+            ListIterator<String[]> it = formRowList.listIterator();
+            while ( it.hasNext() ) {
+                ids.add(it.next()[3]);
+            }
+        }
+        //create list from set
+        return new LinkedList<String>(ids);
     }
 
 
