@@ -13,11 +13,11 @@ import android.content.Intent;
  */
 
 public class DatabaseFileService extends IntentService {
-    private static final String copyActionName = String.valueOf(R.string.copy_action_name);
-    private static final String dlActionName = String.valueOf(R.string.dl_action_name);
-    private static final String unzipActionName = String.valueOf(R.string.unzip_action_name);
-    private static final String copyCompleteActionName = String.valueOf(R.string.copy_complete_action_name);
-    private static final String unzipCompleteActionName = String.valueOf(R.string.unzip_complete_action_name);
+    private final String copyActionName = getString(R.string.copy_action_name);
+    private final String dlActionName = getString(R.string.dl_action_name);
+    private final String unzipActionName = getString(R.string.unzip_action_name);
+    private final String copyCompleteActionName = getString(R.string.copy_complete_action_name);
+    private final String unzipCompleteActionName = getString(R.string.unzip_complete_action_name);
 
 
     public DatabaseFileService() {

@@ -9,6 +9,7 @@ import android.webkit.WebView;
  */
 
 public class ArticleView extends WebView {
+
     //Constructors initialize super-class to serve compatibility with WebView
     public ArticleView(Context context) {
         super(context);
@@ -20,6 +21,8 @@ public class ArticleView extends WebView {
     public ArticleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
+
 
     public void loadArticle(String article) {
         StringBuilder html = new StringBuilder();

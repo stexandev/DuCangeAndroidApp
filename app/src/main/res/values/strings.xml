@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DuCange</string>
-    <string name="search_hint">Suche Stichwort...</string>
+    <string name="search_hint">Suche...</string>
+    <string name="search_no_result">Keine Ergebnisse.</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_search">Suchen</string>
     <string name="menu_imprint">Impressum</string>
@@ -15,12 +16,27 @@
     <string name="unzip_db_complete">Extracting database file complete</string>
 
 
-
-
     <string name="copy_action_name">de.stexan.ducangeandroidapp.COPY</string>
     <string name="dl_action_name">de.stexan.ducangeandroidapp.DOWNLOAD</string>
     <string name="unzip_action_name">de.stexan.ducangeandroidapp.UNZIP</string>
     <string name="copy_complete_action_name">de.stexan.ducangeandroidapp.COPY_COMPLETE</string>
     <!-- Download action name is system intern -->
     <string name="unzip_complete_action_name">de.stexan.ducangeandroidapp.UNZIP_COMPLETE</string>
+    <string name="title_activity_imprint">Impressum</string>
+    <string name="action_settings">Settings</string>
+    <string name="imprint_text">
+        <![CDATA[
+        <html><head></head><body style="color:black;">
+        <h2>Lizenzen</h2>
+
+        <p>§1 Der Quellcode dieser Anwendung ist lizenziert unter <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">Creative Commons Attribution-ShareAlike 4.0 International</a>.</p>
+        <p>§2 Die folgenden Bestandteile (Assets) dieses Werkes sind lizensiert unter <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/fr/legalcode.fr">Creative Commons Attribution - Pas d’Utilisation Commerciale - Pas de Modification 2.0 France License</a>:</p>
+        <ul>
+            <li>ducange.css</li>
+            <li>ducange.sqlite</li>
+        </ul>
+        <p>Diese Bestandteile sind entsprechend den Lizenzbedingungen unverändert übernommen worden.</p>
+        </body>
+        ]]>
+    </string>
 </resources>

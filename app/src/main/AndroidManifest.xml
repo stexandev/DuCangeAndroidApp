@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     package="de.stexan.ducangeandroidapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,23 +8,24 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:minSdkVersion="15"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:launchMode="singleTop"
+        android:minSdkVersion="15"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".MainActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".Search">
-            <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
@@ -31,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".CheckDatabaseActivity"
+            android:name=".DatabaseActivity"
             android:label="@string/title_activity_check_database"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog">
@@ -40,7 +42,8 @@
                 android:value="de.stexan.ducangeandroidapp.MainActivity" />
         </activity>
 
-        <service android:name=".DatabaseFileService"
+        <service
+            android:name=".DatabaseFileService"
             android:exported="false">
             <intent-filter>
                 <action android:name="@string/copy_action_name" />
@@ -58,8 +61,25 @@
             </intent-filter>
         </receiver>
         -->
-        <meta-data android:name="android.webkit.WebView.MetricsOptOut"
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
+
+        <activity
+            android:name=".ImprintActivity"
+            android:label="@string/title_activity_imprint"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.stexan.ducangeandroidapp.MainActivity" />
+        </activity>
+
+        <provider
+            android:name="values.SearchSuggestionsProvider"
+            android:authorities="de.stexan.ducangeandroidapp.SearchSuggestionsProvider"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
 
 </manifest>

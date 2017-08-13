@@ -8,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.TextView;
 
+import java.util.List;
+import java.util.ListIterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,8 +22,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Toolbar theToolbar = (Toolbar) findViewById(R.id.appbar);
-        setSupportActionBar(theToolbar);
+        Toolbar appBar = (Toolbar) findViewById(R.id.appbar);
+        setSupportActionBar(appBar);
+        handleIntent(getIntent());
 
 
 
@@ -42,26 +45,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        /*
         DatabaseAccess db = new DatabaseAccess(this);
 
         if (! db.readable) {
-            Intent intent = new Intent(this, CheckDatabaseActivity.class);
+            Intent intent = new Intent(this, DatabaseActivity.class);
             startActivity(intent);
-            /* TODO Change from activity to fragment?
-            DialogFragment newFragment = DatabaseFileFragment.newInstance();
-            newFragment.show(getFragmentManager(), "check db");
-            */
+            // TODO Change from activity to fragment?
+            //DialogFragment newFragment = DatabaseFileFragment.newInstance();
+            //newFragment.show(getFragmentManager(), "check db");
+            //
         } else {
             ArticleView articleView = (ArticleView) findViewById(R.id.articleView);
             articleView.setWebViewClient(new ArticleViewClient());
-            String[] example = db.accessEntryRow("A1");
-            articleView.loadArticle(example[3]);
+            //articleView.getSettings().setJavaScriptEnabled(true);
+            //articleView.addJavascriptInterface(new ArticleViewJavaScriptInterface(), "LinkGetter");
+
+            String example = db.accessEntry("A1");
+            //String links = db.accessLinks("A1");
+            //System.out.println(links);
+            articleView.loadArticle(example);
         }
+        */
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
     }
 
     @Override
@@ -76,11 +91,13 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
+
         /* Habe deinen Teil an die Toolbar angeschlossen. TextChange und TextSubmit klappen.
          * Wäre besser, wenn du diesen Teil in die Seach.java auslagerst und den SearchManager benutzt,
          * damit die Ergebnisse nicht in einer extra Liste ausgegeben werden müssen, sondern in den
          * Suchvorschlägen des SearchWidgets. Das Grundgerüst habe ich schon vorgegeben.
          */
+        /*
         searchView.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
                     @Override
@@ -89,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("textSubmit");
 
                         ( findViewById (R.id.action_search)).clearFocus();
-
-                        (( TextView) findViewById( R.id.searchViewResult ) ).setText("sdfsdf");
 
                         return true;
                     }
@@ -106,7 +121,53 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-        );
+
+        );*/
+
+        return true;
+    }
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String form = intent.getStringExtra(SearchManager.QUERY);
+            DatabaseAccess db = new DatabaseAccess(this);
+
+            if (! db.readable) {
+                Intent i = new Intent(this, DatabaseActivity.class);
+                startActivity(i);
+
+            } else {
+                ArticleView aView = (ArticleView) findViewById(R.id.articleView);
+                aView.setWebViewClient(new ArticleViewClient());
+                List<String> ids = db.queryForm(form);
+                StringBuilder articles = new StringBuilder();
+                if ( ! ids.isEmpty()) {
+                    ListIterator<String> it = ids.listIterator();
+                    while ( it.hasNext() ) {
+                        articles.append( db.accessEntry(it.next()) );
+                    }
+                aView.loadArticle(articles.toString());
+                } else {
+                    aView.loadData( getString( R.string.search_no_result ), "text/html", "UTF-8");
+                }
+
+
+            }
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+
+                break;
+            case R.id.action_imprint:
+                Intent intent = new Intent(this, ImprintActivity.class);
+                this.startActivity(intent);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
         return true;
     }
