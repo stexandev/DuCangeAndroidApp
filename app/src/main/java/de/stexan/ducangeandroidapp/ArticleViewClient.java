@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 
-/**
- * Created by stefan on 20.06.17.
- */
 
 class ArticleViewClient extends WebViewClient {
     @Override
