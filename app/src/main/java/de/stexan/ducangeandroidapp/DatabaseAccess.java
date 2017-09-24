@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.util.AbstractSequentialList;
 import java.util.ArrayList;
@@ -74,11 +71,13 @@ class DatabaseAccess {
     String accessEntry(String id) {
         return accessEntryRow(id)[3];
     }
+    /** unused
     String accessLinks(String id) {
         Document doc = Jsoup.parse( accessEntry(id) );
         Elements links = doc.getElementsByTag("a");
         return links.toString();
     }
+     */
     
 
     /** DuCange-Online behaviour (JavaScript)

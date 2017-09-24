@@ -31,9 +31,9 @@ public class DatabaseFile  {
     private static final String ASSET_FILE_NAME = "ducange.sqlite";
     private static final String DL_FILE_NAME = "ducange.sqlite.gz";
     private static final String DEST_FILE_NAME = "ducange.db";
-    private static final String DOWNLOADSOURCE_ONE = "https://github.com/stexandev/DuCangeAndroidApp/raw/master/app/src/main/assets/ducange.sqlite.gz";
+    //private static final String DOWNLOADSOURCE_ONE = "https://github.com/stexandev/DuCangeAndroidApp/raw/master/app/src/main/assets/ducange.sqlite.gz";
     private static final String DB_FILE_MD5 = "8527a762266695efc573246be44a9e0e";
-    private static final String DB_FILE_GZ_MD5 = "dc3196077ebc61e37d46f513b81998db";
+    //private static final String DB_FILE_GZ_MD5 = "dc3196077ebc61e37d46f513b81998db";
     private final Context appContext;
     private final String pathToDatabaseFile;
 
@@ -42,7 +42,7 @@ public class DatabaseFile  {
         this.pathToDatabaseFile = appContext.getFilesDir().getPath() + "/" + DEST_FILE_NAME;
     }
 
-
+    /** unused
     public long downloadDatabase() {
         //implement file download
         long dlRef;
@@ -59,6 +59,7 @@ public class DatabaseFile  {
         dlRef = dm.enqueue(request);
         return dlRef;
     }
+     */
 
     public boolean checkAssets() {
         try {
@@ -73,22 +74,23 @@ public class DatabaseFile  {
     }
 
 
+    /** unused
     public void unzipDatabaseFromDownloads() {
         GZIPInputStream is;
         OutputStream os;
         MessageDigest md;
 
         try {
-            /* open downloaded gzip-file stored in download folder as InputStream */
+            // open downloaded gzip-file stored in download folder as InputStream
             is = new GZIPInputStream( new FileInputStream(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).toString() + "/" + DL_FILE_NAME));
-            /* open local database file(handler) as OutputStream */
+            // open local database file(handler) as OutputStream
             os = new FileOutputStream(pathToDatabaseFile);
 
             md = MessageDigest.getInstance("MD5");
             //decorate inputStream is to calculate md5 sum
             DigestInputStream dis = new DigestInputStream(is, md);
 
-            /* copy */
+            // copy
             byte[] buffer = new byte[1024];
             int length = 0;
             while ((length = dis.read(buffer)) > 0) {
@@ -99,7 +101,7 @@ public class DatabaseFile  {
             checkMD5(md, DB_FILE_MD5);
 
 
-            /* close Streams */
+            // close Streams
             os.flush();
             os.close();
             is.close();
@@ -113,39 +115,46 @@ public class DatabaseFile  {
         }
 
     }
+    */
 
     public void copyDatabaseFromAssets() {
         try {
-            /* open file stored in assets as InputStream */
+            // open file stored in assets as InputStream
             InputStream is = appContext.getAssets().open(ASSET_FILE_NAME);
-            /* open local database file(handler) as OutputStream */
+            // open local database file(handler) as OutputStream
             OutputStream os = new FileOutputStream(pathToDatabaseFile);
-
+            // create message digest
             MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("MD5");
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
+
             //decorate inputStream is to calculate md5 sum
             DigestInputStream dis = new DigestInputStream(is, md);
 
-            /* copy */
-            byte[] buffer = new byte[1024];
-            int length = 0;
-
+            // copy
+            try {
+                byte[] buffer = new byte[1024];
+                int length = 0;
                 while ((length = dis.read(buffer)) > 0) {
                     os.write(buffer, 0, length);
                 }
                 //chekc md5sum
-                //checkMD5(md, DB_FILE_MD5);
-
-
-            /* close Streams */
+                String md5match = String.valueOf(checkMD5(md, DB_FILE_MD5));
+                System.out.println("der md5 check ergab:" + md5match);
+            } finally {
                 os.flush();
                 os.close();
-                is.close();
-                dis.close();
+            }
+
+
+
+
+            // close Streams
+            is.close();
+            dis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,15 +175,15 @@ public class DatabaseFile  {
     /* Check if already copied */
     public boolean checkLocalDbFile() {
         boolean alreadyCopied;
-        boolean notCorrupted = true; //mock-up... implemet HASH check
+        boolean notCorrupted = true; //mock-up... implemet CRC check
 
         File dbFile = new File(pathToDatabaseFile);
         alreadyCopied = dbFile.exists();
 
         return (alreadyCopied && notCorrupted);
     }
-
-    /* Check if already downloaded */
+    /* unused
+    // Check if already downloaded
     public boolean checkIfDownloaded() {
         boolean alreadyDownloaded;
         boolean notCorrupted = true; //mock-up... implemet HASH check
@@ -184,5 +193,6 @@ public class DatabaseFile  {
 
         return (alreadyDownloaded && notCorrupted);
     }
+    */
 
 }

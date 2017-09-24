@@ -91,39 +91,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
-
-        /* Habe deinen Teil an die Toolbar angeschlossen. TextChange und TextSubmit klappen.
-         * Wäre besser, wenn du diesen Teil in die Seach.java auslagerst und den SearchManager benutzt,
-         * damit die Ergebnisse nicht in einer extra Liste ausgegeben werden müssen, sondern in den
-         * Suchvorschlägen des SearchWidgets. Das Grundgerüst habe ich schon vorgegeben.
-         */
-        /*
-        searchView.setOnQueryTextListener(
-                new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-
-                        System.out.println("textSubmit");
-
-                        ( findViewById (R.id.action_search)).clearFocus();
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        System.out.println("textChange");
-                        return true;
-                    }
-
-                    public void search(String query) {
-                        // reset loader, swap cursor, etc.
-                    }
-
-                }
-
-        );*/
-
         return true;
     }
     private void handleIntent(Intent intent) {
