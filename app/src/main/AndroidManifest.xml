@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ DuCange Android App – A Latin Glossary
+  ~ Copyright (C) 2017  Stefan Hynek
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     package="de.stexan.ducangeandroidapp">
@@ -44,20 +62,19 @@
             android:name=".DatabaseFileService"
             android:exported="false">
             <intent-filter>
-                <action android:name="@string/copy_action_name" />
-                <action android:name="@string/dl_action_name" />
-                <action android:name="@string/unzip_action_name" />
+                <action android:name="de.stexan.ducangeandroidapp.COPY" />
+                <action android:name="de.stexan.ducangeandroidapp.COPY_COMPLETE" />
             </intent-filter>
         </service>
         <!--
-        <receiver android:name=".DatabaseFileServiceReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="@string/copy_complete_action_name" />
-                <action android:name="@string/unzip_complete_action_name" />
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
-            </intent-filter>
-        </receiver>
+        ~<receiver android:name=".DatabaseFileServiceReceiver"
+        ~    android:exported="false">
+        ~    <intent-filter>
+        ~        <action android:name="@string/copy_complete_action_name" />
+        ~        <action android:name="@string/unzip_complete_action_name" />
+        ~        <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+        ~    </intent-filter>
+        ~</receiver>
         -->
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
@@ -77,7 +94,7 @@
             android:name="values.SearchSuggestionsProvider"
             android:authorities="de.stexan.ducangeandroidapp.SearchSuggestionsProvider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
     </application>
 
 </manifest>
