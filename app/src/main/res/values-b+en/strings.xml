@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">DuCange</string>
+    <string name="search_hint">Search...</string>
+    <string name="search_no_result">No results.</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_imprint">Imprint</string>
+    <string name="title_activity_check_database">CheckDatabaseActivity</string>
+    <string name="copy_db_from_assets">Copy Database-File</string>
+    <string name="copy_db_from_assets_complete">Copy of Database-File complete</string>
+    <string name="copy_action_name">de.stexan.ducangeandroidapp.COPY</string>
+    <string name="copy_complete_action_name">de.stexan.ducangeandroidapp.COPY_COMPLETE</string>
+
+    <!-- Download option will be removed //-->
+    <string name="dl_db_from_web">Downloading database file</string>
+    <string name="unzip_db">Extracting database file</string>
+    <string name="db_download_title">DuCange Glossary Datenbank Download</string>
+    <string name="db_download_description">DuCange Database Download Beschreibung</string>
+    <string name="dl_db_from_web_complete">Download der Datenbank-Datei abgeschlossen</string>
+    <string name="unzip_db_complete">Extracting database file complete</string>
+    <string name="dl_action_name">de.stexan.ducangeandroidapp.DOWNLOAD</string>
+    <string name="unzip_action_name">de.stexan.ducangeandroidapp.UNZIP</string>
+    <string name="unzip_complete_action_name">de.stexan.ducangeandroidapp.UNZIP_COMPLETE</string>
+
+
+    <string name="title_activity_imprint">Imprint</string>
+    <string name="action_settings">Settings</string>
+    <string name="imprint_text">
+        <![CDATA[
+        <html><head></head><body style="color:black;">
+        <h2>Copyright</h2>
+        This app is developed by <a href="https://www.stexan.de/">Stefan Hynek</a> for private or scientific use and does not pursue commercial aims.
+        <h2>Notes</h2>
+        <p>This project is in no way affiliated with <a href="http://www.enc.sorbonne.fr">École nationale des chartes</a> or the online-edition of the <a href="http://ducange.enc.sorbonne.fr/">DuCange</a>. It does only use certain parts of the afore-mentioned project that have been published under a license that allow incorporation into other projectt.</p>
+
+        <h2>Licenses</h2>
+        <p>§1 The source code of this application is licensed under <a href="http://www.gnu.org/licenses/">GNU General Public License (GPL)</a>.</p>
+        <p>§2 Following parts (assets) of this work are licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/fr/">Creative Commons Attribution - Pas d’Utilisation Commerciale - Pas de Modification 2.0 France License</a>:</p>
+        <ul>
+            <li><a href="https://sourceforge.net/p/ducange/code/HEAD/tree/enc/ducange.sqlite">ducange.sqlite</a> – committed 2012-04-20 18:40:41 CEST by user “glorieux” (Frédéric Glorieux, École nationale des chartes)</li>
+        </ul>
+        <p>These parts have been used unrevised according to the license terms.</p>
+        <p>§3 The contents of the following parts (assets) of this work are licensed under <a href="http://www.gnu.org/licenses/"> GNU Library or Lesser General Public License version 3.0 (LGPLv3)</a>:</p>
+        <ul>
+            <li><a href="https://sourceforge.net/p/ducange/code/HEAD/tree/enc/ducange.css">ducange.css</a> – committed 2012-04-20 18:40:41  CEST by user “glorieux” (Frédéric Glorieux, École nationale des chartes)</li>
+        </ul>
+        </body>
+        ]]>
+    </string>
+</resources>

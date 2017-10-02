@@ -71,7 +71,7 @@ class DatabaseAccess {
 
         String[] entryRow = new String[5];
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null) {
             cursor.moveToFirst();
             entryRow[0] = cursor.getString(0); //id
             entryRow[1] = cursor.getString(1); //cb
